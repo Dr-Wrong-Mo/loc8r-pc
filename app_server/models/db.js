@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const host = process.env.DB_HOST || 'mongodb://127.0.0.1/'
+const host = process.env.DB_HOST || 'mongodb://127.0.0.1/';
 const dbURL = `${host}`;
 const readLine = require('readline');
 
