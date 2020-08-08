@@ -3,7 +3,7 @@ const apiOptions = {
   server: 'http://localhost:3000'
 };
 if (process.env.NODE_ENV === 'production') {
-  apiOptions.server = 'https://enigmatic-badlands-07570.herokuapp.com/';
+  apiOptions.server = 'https://enigmatic-badlands-07570.herokuapp.com';
 }
 const apiKey = process.env.DB_apiKey;
 
@@ -76,7 +76,7 @@ const homelist = function (req, res) {
     qs: {
       lng: -94.581515,
       lat: 39.024153,
-      maxDistance: 20
+      maxDistance: 20000
     }
   };
   request(
