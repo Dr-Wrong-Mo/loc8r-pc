@@ -26,7 +26,6 @@ const showError = (req, res, status) =>  {
 
 const renderHomepage = function (req, res, responseBody) {
   let message = null;
-  console.log("length", responseBody.length);
   if (!(responseBody instanceof Array)) {
     message = "API lookup error";
     responseBody = [];
@@ -85,12 +84,9 @@ const homelist = function (req, res) {
     (err, response, body) => {
       let data = body;
       //let data = [];
-      //console.log(data[0].distance);
       if (response.statusCode === 200 && data.length) {
         for (let i = 0; i < data.length; i++) {
-          console.log("first data", data[i].distance);
           data[i].distance = formatDistance(data[i].distance);
-          console.log("second data", data[i].distance);
         }
       }
       renderHomepage(req, res, data);
