@@ -5,7 +5,7 @@ const apiOptions = {
 if (process.env.NODE_ENV === 'production') {
   apiOptions.server = 'https://enigmatic-badlands-07570.herokuapp.com/';
 }
-const apiKey = DB_apiKey;
+const apiKey = process.env.DB_apiKey;
 
 const showError = (req, res, status) =>  {
   let title = '';
