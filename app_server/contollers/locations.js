@@ -83,8 +83,7 @@ const homelist = function (req, res) {
     requestOptions,
     (err, response, body) => {
       let data = body;
-      //let data = [];
-      if (response.statusCode === 200 && data.length) {
+      if (response === 200 && data.length) {
         for (let i = 0; i < data.length; i++) {
           data[i].distance = formatDistance(data[i].distance);
         }
