@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const readLine = require('readline');
 
-console.log("process.env.NODE_ENV is set to", process.env.NODE_ENV);
-console.log("process.env.DB_HOST is set to", process.env.DB_HOST);
-
 let dbURL = 'mongodb://127.0.0.1/loc8r';
 if (process.env.NODE_ENV === 'production') {
   dbURL = process.env.DB_HOST || process.env.MONGODB_URI;

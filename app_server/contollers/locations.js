@@ -1,24 +1,13 @@
 const request = require('request');
 
-let apiOptions = {};
-
-if (process.env.NODE_ENV === 'development') {
-  apiOptions.server = 'http://localhost:3000';
-} else {
-  apiOptions.server = 'https://enigmatic-badlands-07570.herokuapp.com';
-};
-
-console.log("apiOptions is set to", apiOptions);
-
-/* let apiOptions = {
+let apiOptions = {
   server: 'http://localhost:3000'
 };
 
 if (process.env.NODE_ENV === 'production') {
   apiOptions.server = 'https://enigmatic-badlands-07570.herokuapp.com';
-} */
+}
 
-console.log('apiOptions is ', apiOptions);
 const apiKey = process.env.DB_apiKey;
 
 const showError = (req, res, status) =>  {
