@@ -9,7 +9,7 @@ export class Loc8rDataService {
 
   constructor(private http: HttpClient) { }
 
-  private apiBaseUrl = 'http://localhost:3000/api';
+  private apiBaseUrl = 'https://enigmatic-badlands-07570.herokuapp.com'
 
   public getLocations(): Promise<Location[]> {
     const lng: number = -94.576320;
