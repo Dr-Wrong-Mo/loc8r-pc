@@ -1,7 +1,5 @@
 const request = require('request');
 
-//process.env.NODE_ENV = 'development';
-
 let apiOptions = {};
 
 if (process.env.NODE_ENV === 'development') {

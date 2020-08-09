@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const readLine = require('readline');
 
-process.env.NODE_ENV = 'production';
-
 console.log("process.env.NODE_ENV is set to", process.env.NODE_ENV);
 console.log("process.env.DB_HOST is set to", process.env.DB_HOST);
 
