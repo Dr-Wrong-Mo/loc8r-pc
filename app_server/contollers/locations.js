@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   apiOptions.server = 'https://enigmatic-badlands-07570.herokuapp.com';
 }
 
+console.log('apiOptions is set to', apiOptions);
+
 const showError = (req, res, status) =>  {
   let title = '';
   let content = '';
@@ -107,7 +109,6 @@ const renderDetailPage = function (req, res, location) {
     location
   });
 };
-
 
 const getLocationInfo = (req, res, callback) => {
   const path = `/api/locations/${req.params.locationid}`;
