@@ -25,7 +25,7 @@ a.navbar-brand {
 
 .navbar-light .navbar-toggler {
     color: white;
-    border-color: white;
+    border-color: transparent;
 }
 
 .navbar-toggler-iconn {

@@ -39,6 +39,7 @@ export class LocationDetailsComponent implements OnInit {
   };
 
   public onReviewSubmit(): void {
+    console.log("submitted text");
     this.formError = '';
     if (this.formIsValid()) {
       console.log(this.newReview);
