@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location, Review } from './location';
 import { environment } from '../environments/environment';
+import { User } from './user';
+import { Authresponse } from './authresponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Loc8rDataService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private apiBaseUrl = environment.apiBaseUrl;
   //private apiBaseUrl = 'http://localhost:3000/api'  //Use this for development
@@ -20,7 +21,7 @@ export class Loc8rDataService {
     return this.http
       .get(url)
       .toPromise()
-      .then(response => response as Location[])
+      .then((response) => response as Location[])
       .catch(this.handleError);
   }
 
@@ -29,16 +30,36 @@ export class Loc8rDataService {
     return this.http
       .get(url)
       .toPromise()
-      .then(response => response as Location)
+      .then((response) => response as Location)
       .catch(this.handleError);
   }
 
-  public addReviewByLocationId(locationId: string, formData: Review): Promise<Review> {
+  public addReviewByLocationId(
+    locationId: string,
+    formData: Review
+  ): Promise<Review> {
     const url: string = `${this.apiBaseUrl}locations/${locationId}/reviews`;
     return this.http
       .post(url, formData)
       .toPromise()
-      .then(response => response as Review)
+      .then((response) => response as Review)
+      .catch(this.handleError);
+  }
+
+  public login(user: User): Promise<Authresponse> {
+    return this.makeAuthApiCall('login', user);
+  }
+
+  public register(user: User): Promise<Authresponse> {
+    return this.makeAuthApiCall('register', user);
+  }
+
+  private makeAuthApiCall(urlPath: string, user: User): Promise<Authresponse> {
+    const url: string = `${this.apiBaseUrl}/${urlPath}`;
+    return this.http
+      .post(url, user)
+      .toPromise()
+      .then((response) => response as Authresponse)
       .catch(this.handleError);
   }
 
@@ -46,5 +67,4 @@ export class Loc8rDataService {
     console.error('Something has gone wrong', error);
     return Promise.reject(error.message || error);
   }
-
 }

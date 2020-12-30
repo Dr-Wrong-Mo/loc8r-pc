@@ -1,10 +1,35 @@
 const mongoose = require('mongoose');
 const Loc = mongoose.model('Location');
+const User = mongoose.model('User');
+
+const getAuthor = (req, res, callback) => {
+  if (req.payload && req.payload.email) {
+    User
+      .findOne({ email : req.payload.email })
+      .exec((err, user) => {
+        if(!user) {
+          return res
+            .status(404)
+            .json({"message": "User not found"});
+        } else if (err) {
+          console.log(err);
+          return res
+            .status(404)
+            .json(err);
+        }
+        callback(req, res, user.name);
+      });
+  } else {
+    return res
+      .status(404)
+      .json({"message": "User not found"});
+  }
+};
 
 const doSetAverageRating = (location) => {
   if (location.reviews && location.reviews.length > 0) {
     const count = location.reviews.length;
-    const total = location.reviews.reduce((acc, {rating}) => {
+    const total = location.reviews.reduce((acc, { rating }) => {
       return acc + rating;
     }, 0);
 
@@ -30,13 +55,13 @@ const updateAverageRating = (locationId) => {
 };
 
 
-const doAddReview = (req, res, location) => {
+const doAddReview = (req, res, location, author) => {
   if (!location) {
     res
       .status(404)
-      .json({"message": "Location not found3"});
+      .json({ "message": "Location not found3" });
   } else {
-    const {author, rating, reviewText} = req.body;
+    const { rating, reviewText } = req.body;
     location.reviews.push({
       author,
       rating,
@@ -59,68 +84,72 @@ const doAddReview = (req, res, location) => {
 };
 
 const reviewsCreate = (req, res) => {
-  const locationId = req.params.locationid;
-  if (locationId) {
-    Loc
-      .findById(locationId)
-      .select('reviews')
-      .exec((err, location) => {
-        if (err) {
-          res
-            .status(400)
-            .json(err);
-        } else {
-          doAddReview(req, res, location);
-        }
-      });
-  } else {
-    res
-      .status(404)
-      .json({"message": "Location not found 1"});
-  }
+  getAuthor(req, res,
+
+    (req, res, userName) => {
+      const locationId = req.params.locationid;
+      if (locationId) {
+        Loc
+          .findById(locationId)
+          .select('reviews')
+          .exec((err, location) => {
+            if (err) {
+              res
+                .status(400)
+                .json(err);
+            } else {
+              doAddReview(req, res, location, userName);
+            }
+          });
+      } else {
+        res
+          .status(404)
+          .json({ "message": "Location not found 1" });
+      }
+    });
 };
 
 const reviewsReadOne = (req, res) => {
-    Loc
-      .findById(req.params.locationid)
-      .select('name reviews')
-      .exec((err, location) => {
-        if (!location) {
+  Loc
+    .findById(req.params.locationid)
+    .select('name reviews')
+    .exec((err, location) => {
+      if (!location) {
+        return res
+          .status(404)
+          .json({ "message": "location not found2" });
+      } else if (err) {
+        return res
+          .status(400)
+          .json(err);
+      }
+      if (location.reviews && location.reviews.length > 0) {
+        const review = location.reviews.id(req.params.reviewid);
+
+        if (!review) {
           return res
             .status(404)
-            .json({"message": "location not found2"});
-        } else if (err) {
-          return res
-            .status(400)
-            .json(err);
-        }
-        if (location.reviews && location.reviews.length > 0) {
-          const review = location.reviews.id(req.params.reviewid);
-  
-          if (!review) {
-            return res
-              .status(404)
-              .json({"message": "review not found"});
-          } else {
-            const response = {
-              location: {
-                name: location.name,
-                id: req.params.locationid
-              },
-              review
-            };
-  
-            return res
-              .status(200)
-              .json(response);
-          }
+            .json({ "message": "review not found" });
         } else {
+          const response = {
+            location: {
+              name: location.name,
+              id: req.params.locationid
+            },
+            review
+          };
+
           return res
-            .status(404)
-            .json({"message": "No reviews found"});
+            .status(200)
+            .json(response);
         }
-      });
-  };
+      } else {
+        return res
+          .status(404)
+          .json({ "message": "No reviews found" });
+      }
+    });
+};
 
 const reviewsUpdateOne = (req, res) => {
   if (!req.params.locationid || !req.params.reviewid) {
@@ -178,16 +207,16 @@ const reviewsUpdateOne = (req, res) => {
           });
       }
     }
-  );
+    );
 };
-  
+
 
 const reviewsDeleteOne = (req, res) => {
-  const {locationid, reviewid} = req.params;
+  const { locationid, reviewid } = req.params;
   if (!locationid || !reviewid) {
     return res
       .status(404)
-      .json({'message': 'Not found, locationid and reviewid are both required'});
+      .json({ 'message': 'Not found, locationid and reviewid are both required' });
   }
 
   Loc
@@ -197,7 +226,7 @@ const reviewsDeleteOne = (req, res) => {
       if (!location) {
         return res
           .status(404)
-          .json({'message': 'Location not found'});
+          .json({ 'message': 'Location not found' });
       } else if (err) {
         return res
           .status(400)
@@ -208,7 +237,7 @@ const reviewsDeleteOne = (req, res) => {
         if (!location.reviews.id(reviewid)) {
           return res
             .status(404)
-            .json({'message': 'Review not found'});
+            .json({ 'message': 'Review not found' });
         } else {
           location.reviews.id(reviewid).remove();
           location.save(err => {
@@ -227,15 +256,15 @@ const reviewsDeleteOne = (req, res) => {
       } else {
         res
           .status(404)
-          .json({'message': 'No Review to delete'});
+          .json({ 'message': 'No Review to delete' });
       }
     });
 };
 
 
 module.exports = {
-    reviewsCreate,
-    reviewsReadOne,
-    reviewsUpdateOne,
-    reviewsDeleteOne
+  reviewsCreate,
+  reviewsReadOne,
+  reviewsUpdateOne,
+  reviewsDeleteOne
 };

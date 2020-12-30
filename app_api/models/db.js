@@ -6,6 +6,7 @@ if (process.env.NODE_ENV === 'production') {
   dbURL = process.env.DB_HOST || process.env.MONGODB_URI;
 }
 
+console.log("dbURL is set to", dbURL);
 console.log('NODE_ENV is set to ', process.env.NODE_ENV);
 
 const connect = () => {
@@ -63,3 +64,4 @@ process.on('SIGTERM', () => {
 connect();
 
 require('./locations');
+require('./users');

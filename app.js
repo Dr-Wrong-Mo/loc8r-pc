@@ -1,10 +1,14 @@
-const createError = require('http-errors');
+require('dotenv').config();
 const express = require('express');
+const createError = require('http-errors');
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+//const bodyParser = require('body-parser');
+const passport = require('passport');
 require('./app_api/models/db');
+require('./app_api/config/passport');
 
 //const indexRouter = require('./app_server/routes/index');
 const apiRouter = require('./app_api/routes/index');
@@ -21,14 +25,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'app_public', 'build')));
-
 //app.use(express.static(path.join(__dirname, 'app_public')));
-
+app.use(express.static(path.join(__dirname, 'app_public', 'build')));
+app.use(passport.initialize());
 
 app.use('/api', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 //app.use('/', indexRouter);
@@ -43,6 +46,14 @@ app.use(function(req, res, next) {
 });
 
 // error handler
+//Catch unathorised errors
+app.use((err, req, res, next) => {
+  if (err.name === 'UnathorizedError') {
+    res
+      .status(401)
+      .json({"message": err.name + ": " + err.message});
+  }
+});
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
