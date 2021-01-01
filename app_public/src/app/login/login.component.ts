@@ -4,11 +4,11 @@ import { AuthenticationService } from '../authentication.service';
 import { HistoryService } from '../history.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class LoginComponent implements OnInit {
   public formError: string = '';
 
   public credentials = {
@@ -19,33 +19,11 @@ export class RegisterComponent implements OnInit {
 
   public pageContent = {
     header: {
-      title: 'Create a new account',
+      title: 'Sign in to Loc8r',
       strapline: '',
     },
     sidebar: '',
   };
-
-  public onRegisterSubmit(): void {
-    this.formError = '';
-    if (
-      !this.credentials.name ||
-      !this.credentials.email ||
-      !this.credentials.password
-    ) {
-      this.formError = 'All fields are required, please try again';
-    } else {
-      this.doRegister();
-    }
-  }
-
-  private doRegister(): void {
-    this.authenticationService
-      .register(this.credentials)
-      .then(() =>
-        this.router.navigateByUrl(this.historyService.getLastNonLoginUrl())
-      )
-      .catch((message) => (this.formError = message));
-  }
 
   constructor(
     private router: Router,
@@ -54,4 +32,24 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  public onLoginSubmit(): void {
+    this.formError = '';
+    if (!this.credentials.email || !this.credentials.password) {
+      this.formError = 'All fields are required, please try again';
+    } else {
+      this.doLogin();
+    }
+  }
+
+  private doLogin(): void {
+    this.authenticationService
+      .login(this.credentials)
+      .then(() =>
+        this.router.navigateByUrl(this.historyService.getLastNonLoginUrl())
+      )
+      .catch((message) => {
+        this.formError = message;
+      });
+  }
 }

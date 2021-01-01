@@ -1,23 +1,51 @@
 <nav class="navbar fixed-top navbar-expand-md navbar-light">
   <div class="container">
     <a routerLink="" class="navbar-brand">Loc8r</a>
-      <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarMain">
-        <span class="navbar-toggler-iconn fas fa-bars"></span>
-      </button>
+    <button
+      class="navbar-toggler navbar-toggler-left"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarMain"
+    >
+      <span class="navbar-toggler-iconn fas fa-bars"></span>
+    </button>
     <div id="navbarMain" class="navbar-collapse collapse">
-  <ul class="navbar-nav mr-auto">
-    <li class="nav-item">
-      <a routerLink="about" routerLinkActive="active" class="nav-link">About</a>
-    </li>
-  </ul>
-</div>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a routerLink="about" routerLinkActive="active" class="nav-link">
+            About
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav justify-content-end">
+        <li class="nav-item" routerLinkActive="active">
+          <a routerLink="login" class="nav-link" *ngIf="!isLoggedIn()"
+            >Sign in</a
+          >
+        </li>
+        <li
+          class="nav-item dropdown"
+          routerLinkActive="active"
+          *ngIf="isLoggedIn()"
+        >
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown">{{
+            getUsername()
+          }}</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" (click)="doLogout()">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
 <div class="container content">
   <router-outlet></router-outlet>
   <footer>
     <div class="row">
-      <div class="col-12"><small>&copy; Getting Mean - Simon Holmes/Clive Harber 2018</small></div>
+      <div class="col-12">
+        <small>&copy; Getting Mean - Simon Holmes/Clive Harber 2018</small>
+      </div>
     </div>
   </footer>
 </div>
