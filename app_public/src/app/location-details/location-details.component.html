@@ -21,12 +21,10 @@
     <div class="card card-primary">
       <div class="card-block">
         <h2 class="card-title">Facilities</h2>
-        <span
-          *ngFor="let facility of location.facilities"
-          class="badge badge-warning"
-        >
-          <i class="fa fa-check"></i>
-          {{ facility }}
+        <span *ngFor="let facility of location.facilities">
+          <span class="badge badge-warning">
+            <i class="fa fa-check"></i>&nbsp; {{ facility }} </span
+          >&nbsp;
         </span>
       </div>
     </div>
