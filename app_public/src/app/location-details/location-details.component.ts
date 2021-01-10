@@ -50,7 +50,6 @@ export class LocationDetailsComponent implements OnInit {
   };
 
   public onReviewSubmit(): void {
-    console.log('test');
     this.formError = '';
     this.newReview.author = this.getCurrentUser();
     if (this.formIsValid()) {
